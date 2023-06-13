@@ -1,0 +1,240 @@
+:root {
+  --darkergray: #121212;
+  --darkgray: #1d1d1d;
+  --lightgray: #d2d2d2;
+  --white1: #ffffffde;
+  --white2: #ffffff99;
+
+  --heading-size: 2vw;
+  --main-text-size: 1.4vw;
+}
+
+body {
+  font-family: Inter;
+  background-color: var(--background-color);
+  color: var(--main-text);
+  transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+}
+
+/* Forms */
+
+.card {
+  background-color: var(--section-color);
+  color: var(--main-text);
+  border-color: var(--border);
+  width: 22rem;
+  display: inline-block;
+  margin: 1%;
+}
+
+.card-header {
+  font-size: var(--heading-size);
+}
+.card-body {
+  font-size: var(--main-text-size);
+}
+
+input {
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: var(--background-color);
+  color: var(--main-text);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 5px;
+}
+
+textarea {
+  resize: none;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: var(--background-color);
+  color: var(--main-text);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+input[type="time"] {
+  width: 34%;
+}
+
+span {
+  cursor: pointer;
+  position: relative;
+  padding-top: 7px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  text-align: center;
+  margin: 3px;
+  margin-bottom: 10px;
+}
+
+label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+:hover + span {
+  border: 1px solid #0d6efd;
+}
+
+:checked + span {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.belowsched {
+  position: relative;
+}
+
+.extra-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1%;
+}
+
+/* Grid */
+
+.schedule-grid {
+  display: grid;
+  grid-template-rows: auto 25px;
+  grid-auto-rows: minmax(20px, 1fr);
+  background-color: var(--background-color);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.top-row {
+  font-size: var(--heading-size);
+  text-align: center;
+  clip-path: inset(0px 0px -20px 0px);
+  background-color: var(--section-color);
+  border-bottom: 2px solid var(--white2);
+  box-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.1);
+}
+
+.time-slot {
+  grid-column: 1 / 2;
+  grid-row: span 2;
+  font-size: var(--main-text-size);
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+  bottom: 1vw;
+}
+
+.sub-area {
+  border-radius: 5px;
+  padding: 5%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+  margin-bottom: 3%;
+  margin-top: 2%;
+  z-index: 30;
+  background-color: var(--section-color);
+  border: 2px solid var(--white2);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+.sub-area:hover {
+  cursor: pointer;
+  box-shadow: 1px 1px 10px 5px #0d6dfd65;
+}
+
+.sub-name {
+  font-size: var(--heading-size);
+  margin: 0;
+}
+
+.sub-info {
+  font-size: var(--main-text-size);
+  color: var(--sub-text);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.separator {
+  border-color: var(--main-text);
+  opacity: 0.3;
+  grid-column: 2 / -1;
+  border-bottom: 2px dashed;
+  z-index: 0;
+}
+
+/* Styles */
+.light {
+  --background-color: white;
+  --section-color: white;
+  --main-text: black;
+  --sub-text: rgba(0, 0, 0, 0.87);
+  --border: var(--lightgray);
+}
+
+.dark {
+  --background-color: var(--darkergray);
+  --section-color: var(--darkgray);
+  --main-text: var(--white1);
+  --sub-text: var(--white2);
+  --border: var(--sub-text);
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+@media only screen and (max-width: 600px) {
+  :root {
+    --heading-size: 3vw;
+    --main-text-size: 2vw;
+  }
+  .sub-area {
+    padding: 3px;
+    border: 1px solid var(--white2);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 18px 0px,
+      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .card {
+    margin: 10px;
+    width: auto;
+  }
+  .card-header {
+    font-size: 1.5rem;
+  }
+  .card-body {
+    font-size: 1rem;
+  }
+  span {
+    margin: 0;
+  }
+  input[type="time"] {
+    width: 60%;
+    margin-left: 5%;
+    margin-right: 10%;
+  }
+  .extra-buttons {
+    position: inherit;
+  }
+}

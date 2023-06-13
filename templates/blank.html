@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
+    <!-- Download schedule (domtoimage) -->
+    <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Iter Font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter"
+      rel="stylesheet"
+    />
+
+    <title>Class Schedule Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/static/styles.css" rel="stylesheet" />
+  </head>
+  <body class="light">
+    {% block main %}{% endblock %}
+    <section class="belowsched">
+      <!-- Form Card -->
+      <form action="/" method="post" class="card">
+        <h5 class="card-header" id="cardheader">Add a new class</h5>
+        <div class="card-body" id="cardbody">
+          <input type="hidden" name="subid" id="subid" value="" />
+          <input
+            type="text"
+            name="subname"
+            id="subname"
+            placeholder="Class Name"
+            required
+          />
+          <br />
+
+          <!-- Day of the week checkboxes -->
+          <label>
+            <input type="checkbox" name="days" id="Mon" value="Mon" />
+            <span class="unselectable">M</span>
+          </label>
+          <label>
+            <input type="checkbox" name="days" id="Tue" value="Tue" />
+            <span class="unselectable">T</span>
+          </label>
+          <label>
+            <input type="checkbox" name="days" id="Wed" value="Wed" />
+            <span class="unselectable">W</span>
+          </label>
+          <label>
+            <input type="checkbox" name="days" id="Thu" value="Thu" />
+            <span class="unselectable">Th</span>
+          </label>
+          <label>
+            <input type="checkbox" name="days" id="Fri" value="Fri" />
+            <span class="unselectable">F</span>
+          </label>
+          <label>
+            <input type="checkbox" name="days" id="Sat" value="Sat" />
+            <span class="unselectable">S</span>
+          </label>
+
+          <br />
+          <label for="starttime">Start</label>
+          <input type="time" id="starttime" name="start" required />
+          <label for="endtime">End</label>
+          <input type="time" id="endtime" name="end" required />
+          <textarea
+            name="info"
+            id="info"
+            rows="3"
+            placeholder="Additional Information"
+          ></textarea>
+          <br />
+          <input
+            type="submit"
+            id="submit-button"
+            class="btn btn-primary"
+            value="Add"
+          />
+        </div>
+      </form>
+
+      <div class="extra-buttons">
+        <a type="button" id="download" class="btn btn-primary"
+          ><i class="bi bi-download"></i> Download</a
+        >
+        <button type="button" id="switch-mode" class="btn btn-dark">
+          <i class="bi bi-moon"></i>
+        </button>
+      </div>
+    </section>
+
+    <script>
+      // Screenshot and Download
+      function capture() {
+        let domNode = document.getElementById("schedule");
+        var scale = 1.5;
+        if (window.innerWidth < 600) {
+          scale = 3;
+        }
+        domtoimage
+          .toBlob(domNode, {
+            width: domNode.clientWidth * scale,
+            height: domNode.clientHeight * scale,
+            style: {
+              transform: "scale(" + scale + ")",
+              transformOrigin: "top left",
+            },
+          })
+          .then(function (blob) {
+            window.saveAs(blob, "schedule.png");
+          });
+      }
+
+      const btn = document.querySelector("#download");
+      btn.addEventListener("click", capture);
+
+      // Dark/Light mode buttoon
+      const theme = localStorage.getItem("theme");
+      if (theme) {
+        document.body.classList.replace("light", theme);
+      }
+
+      const switchbutton = document.getElementById("switch-mode");
+      switchbutton.onclick = () => {
+        if (document.body.classList.contains("light")) {
+          document.body.classList.replace("light", "dark");
+          localStorage.setItem("theme", "dark");
+        } else {
+          document.body.classList.replace("dark", "light");
+          localStorage.setItem("theme", "light");
+        }
+      };
+    </script>
+    {% block script %}{% endblock %}
+  </body>
+</html>

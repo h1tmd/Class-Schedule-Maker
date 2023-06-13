@@ -1,0 +1,104 @@
+{% extends "blank.html" %} {% block main %}
+<style>
+  /* Columns based on number of days currently */
+  .schedule-grid {
+    grid-template-columns: auto repeat({{days | length}}, 1fr);
+  }
+</style>
+
+<section class="schedule-grid" id="schedule">
+  <!-- Header -->
+  <div class="top-row addshadow">Time</div>
+  {% for day in days %}
+  <div class="top-row addshadow">{{ day }}</div>
+  {% endfor %}
+
+  <!-- Extra row for headroom -->
+  <div class="spacer" style="grid-column: 1fr"></div>
+
+  <!-- Time in hours -->
+  {% for hour in range(timerange[0] - 1, timerange[1]) %}
+  <div class="time-slot">{{ hour % 12 + 1}}:00</div>
+  {% endfor %}
+
+  <!-- Subjects/Classes -->
+  {% for day in subjects %} {% for subject in subjects[day] %}
+  <div
+    class="sub-area addshadow"
+    id="{{ day }}-{{loop.index - 1 }}"
+    style="grid-area: {{ subject['grid'][0] }} / {{subject['grid'][2] }} / {{ subject['grid'][1] }} / {{ subject['grid'][3] }};"
+  >
+    <p class="sub-name">{{ subject["subname"] }}</p>
+    <p class="sub-info">{{ subject["time"] }}</p>
+    <p class="sub-info">{{ subject["info"] }}</p>
+  </div>
+  {% endfor %} {% endfor %}
+
+  <!-- Separator -->
+  {% for hour in range(timerange[0] - 1, timerange[1]) %}
+  <div class="separator" style="grid-row: {{ loop.index * 2 }};"></div>
+  {% endfor %}
+</section>
+
+{% endblock %} {% block script %}
+<script>
+  // Subjects are clickable to allow editing
+  var subs = document.getElementsByClassName("sub-area");
+  for (var i = 0; i < subs.length; i++) {
+    subs[i].addEventListener("click", edit);
+  }
+  const subjects = {{ subjects | tojson }};
+
+  const dayregex = /^[A-Za-z]+/;
+  const indexregex = /[0-9]+$/;
+
+  function edit() {
+    day = this.id.match(dayregex)[0];
+    indexnum = parseInt(this.id.match(indexregex)[0]);
+    document.querySelector("form").scrollIntoView();
+    document.getElementById("subid").value = subjects[day][indexnum]["id"]
+
+    document.getElementById("cardheader").innerText = "Edit class";
+    document.getElementById("subname").value = subjects[day][indexnum]["subname"];
+    for (let nameofday of subjects[day][indexnum]["days"]) {
+      document.getElementById(nameofday).checked = true;
+    }
+    document.getElementById("starttime").value = subjects[day][indexnum]["start"];
+    document.getElementById("endtime").value = subjects[day][indexnum]["end"];
+    document.getElementById("info").value = subjects[day][indexnum]["info"];
+    document.getElementById("submit-button").value = "Edit";
+
+    // Delete button
+    if (!document.getElementById("deletebutton")) {
+      let btn = document.createElement("input");
+      btn.value = "Delete";
+      btn.type = "submit";
+      btn.id = "deletebutton";
+      btn.className = "btn btn-outline-danger float-end";
+      document.getElementById("cardbody").appendChild(btn);
+      btn.addEventListener("click", function(){
+        for (let i of ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]) {
+          document.getElementById(i).checked = false;
+        }
+      });
+    }
+    // Cancel button
+    if (!document.getElementById("cancelbutton")) {
+      let btn = document.createElement("input");
+      btn.value = "Cancel";
+      btn.type = "button";
+      btn.id = "cancelbutton";
+      btn.className = "btn btn-primary";
+      document.getElementById("cardbody").appendChild(btn);
+      btn.addEventListener("click", function(){
+        document.getElementById("subid").value = ""
+        document.querySelector("form").reset()
+        document.getElementById("cardheader").innerText = "Add a new class";
+        document.getElementById("submit-button").value = "Add";
+        document.getElementById("deletebutton").remove()
+        btn.remove()
+      });
+    }
+  }
+</script>
+{% endblock %}
