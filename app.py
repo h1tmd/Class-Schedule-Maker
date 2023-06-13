@@ -18,12 +18,6 @@ Session(app)
 def home():
     # When form is submitted
     if request.method == "POST":
-        # Create session keys
-        if "subjects" not in session:
-            session["subjects"] = {}
-        if "uniqueid" not in session:
-            session["uniqueid"] = 0
-
         # Check if user is editing a subject
         if request.form.get("subid") != "":
             existingid = int(request.form.get("subid"))
@@ -40,6 +34,12 @@ def home():
         subject["time"] = timestring(subject["start"], subject["end"])
         days = request.form.getlist("days")
         subject["days"] = days
+
+        # Create session keys
+        if "subjects" not in session:
+            session["subjects"] = {}
+        if "uniqueid" not in session:
+            session["uniqueid"] = 0
 
         # Append to list
         for day in days:
